@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="title" format="string|reference" />
+    <attr name="titleTextColor" format="color|reference" />
+    <attr name="border" format="reference" />
+    <attr name="srcTint" format="reference|color" />
+    <attr name="subText" format="string|reference" />
+    <attr name="subTextColor" format="reference|color" />
+
+    <declare-styleable name="CircleProgressBar">
+        <attr name="min" format="integer" />
+        <attr name="max" format="integer" />
+        <attr name="progress" format="integer" />
+        <attr name="progressbarColor" format="color" />
+        <attr name="progressBarThickness" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="TitledTextInput">
+        <attr name="android:background" />
+        <attr name="android:backgroundTint" />
+        <attr name="title" />
+        <attr name="titleTextColor" />
+        <attr name="android:hint" />
+        <attr name="android:autofillHints" />
+        <attr name="android:inputType" />
+        <attr name="border" />
+
+    </declare-styleable>
+
+    <declare-styleable name="SwitchView">
+        <attr name="android:text" />
+        <attr name="android:textColor" />
+        <attr name="subText" />
+        <attr name="subTextColor" />
+        <attr name="android:background" />
+        <attr name="android:backgroundTint" />
+        <attr name="android:src" />
+        <attr name="srcTint" />
+        <attr name="android:checked" />
+
+    </declare-styleable>
+
+    <declare-styleable name="CompactSwitchView">
+        <attr name="android:text" />
+        <attr name="compactSwitchViewTextColor" format="color" />
+        <attr name="compactSwitchViewBackground" format="reference|color" />
+        <attr name="compactSwitchViewBackgroundTint" format="color" />
+        <attr name="android:checked" />
+
+    </declare-styleable>
+
+    <declare-styleable name="NestedRecyclerView">
+        <attr name="titleTextColor" />
+        <attr name="android:backgroundTint" />
+        <attr name="android:background" />
+        <attr name="recyclerBackground" format="reference" />
+        <attr name="recyclerBackgroundTint" format="color" />
+        <attr name="emptyTextColor" format="color|reference" />
+        <attr name="emptySrcTint" format="color|reference" />
+        <attr name="emptySrc" format="reference" />
+        <attr name="emptyBackground" format="reference" />
+        <attr name="emptyBackgroundTint" format="color" />
+
+    </declare-styleable>
+
+</resources>
