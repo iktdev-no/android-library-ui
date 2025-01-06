@@ -3,6 +3,7 @@ package no.iktdev.ui
 import android.content.Context
 import android.content.res.TypedArray
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
@@ -125,9 +126,11 @@ class NestedRecyclerView(context: Context, attr: AttributeSet) : RecyclerView(co
                 binding.emptyContainer,
                 R.styleable.NestedRecyclerView_emptyBackgroundTint
             )
-            if (a.hasValue(R.styleable.NestedRecyclerView_headerTextSize)) {
-                binding.nestedTitle.textSize = a.getDimension(R.styleable.NestedRecyclerView_headerTextSize, 28f)
-            }
+            Styling.applyTextSize(
+                a,
+                binding.nestedTitle,
+                R.styleable.NestedRecyclerView_headerTextSize
+            )
         }
 
     }

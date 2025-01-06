@@ -3,6 +3,7 @@ package no.iktdev.ui
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,6 +13,12 @@ object Styling {
     fun applyTextAttr(attr: TypedArray, text: TextView, @StyleableRes id: Int) {
         if (attr.hasValue(id)) {
             text.text = attr.getString(id)
+        }
+    }
+
+    fun applyTextSize(attr: TypedArray, text: TextView, @StyleableRes id: Int) {
+        if (attr.hasValue(id)) {
+            text.setTextSize(TypedValue.COMPLEX_UNIT_PX, attr.getDimensionPixelSize(id, 72).toFloat())
         }
     }
 
