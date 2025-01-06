@@ -60,6 +60,13 @@
         <attr name="emptySrc" format="reference" />
         <attr name="emptyBackground" format="reference" />
         <attr name="emptyBackgroundTint" format="color" />
+        <attr name="headerTextSize" format="dimension|reference" />
+
+    </declare-styleable>
+
+    <declare-styleable name="ToggleButton">
+        <attr name="iconOn" format="reference" />
+        <attr name="iconOff" format="reference" />
 
     </declare-styleable>
 

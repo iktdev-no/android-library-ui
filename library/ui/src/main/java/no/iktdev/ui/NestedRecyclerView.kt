@@ -125,6 +125,9 @@ class NestedRecyclerView(context: Context, attr: AttributeSet) : RecyclerView(co
                 binding.emptyContainer,
                 R.styleable.NestedRecyclerView_emptyBackgroundTint
             )
+            if (a.hasValue(R.styleable.NestedRecyclerView_headerTextSize)) {
+                binding.nestedTitle.textSize = a.getDimension(R.styleable.NestedRecyclerView_headerTextSize, 28f)
+            }
         }
 
     }
