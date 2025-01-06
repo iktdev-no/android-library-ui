@@ -1,18 +1,11 @@
 package no.iktdev.demoapplication
 
-import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import androidx.appcompat.app.AppCompatActivity
 import no.iktdev.demoapplication.databinding.ActivityMainBinding
-import no.iktdev.demoapplication.services.LockscreenWidgetActivity
+import no.iktdev.ui.NestedAdapterData
+import no.iktdev.ui.NestedRecyclerView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,20 +13,11 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
-
-        binding.startLockActivity.setOnClickListener {
-            startActivity(Intent(applicationContext, LockscreenWidgetActivity::class.java))
+        binding.nested.apply {
+            (this.adapter as NestedRecyclerView.NestedAdapter).add(
+                NestedAdapterData("0", "Test", PreviewAdapter())
+            )
         }
 
-
-        binding.startScreen.setOnClickListener {
-            startActivity(Intent(applicationContext, OverlayActivity::class.java))
-            lifecycleScope.launch(Dispatchers.IO) {
-                delay(500)
-                withContext(Dispatchers.Main) {
-                    this@MainActivity.finish()
-                }
-            }
-        }
     }
 }

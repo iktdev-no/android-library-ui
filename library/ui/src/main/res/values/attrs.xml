@@ -6,6 +6,7 @@
     <attr name="srcTint" format="reference|color" />
     <attr name="subText" format="string|reference" />
     <attr name="subTextColor" format="reference|color" />
+    <attr name="headerTextSize" format="dimension" />
 
     <declare-styleable name="CircleProgressBar">
         <attr name="min" format="integer" />
@@ -60,7 +61,7 @@
         <attr name="emptySrc" format="reference" />
         <attr name="emptyBackground" format="reference" />
         <attr name="emptyBackgroundTint" format="color" />
-        <attr name="headerTextSize" format="dimension|reference" />
+        <attr name="headerTextSize" />
 
     </declare-styleable>
 

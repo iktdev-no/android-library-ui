@@ -13,24 +13,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <Button
-                android:id="@+id/go_to_settings"
+            <no.iktdev.ui.NestedRecyclerView
+                android:id="@+id/nested"
+                app:headerTextSize="100sp"
+                app:titleTextColor="#F02"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Go to Settings"
-                tools:ignore="HardcodedText" />
-            <Button
-                android:id="@+id/start_lock_activity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Lock activity"
-                tools:ignore="HardcodedText" />
-
-            <Button
-                android:id="@+id/start_screen"
-                android:text="Screen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                />
         </LinearLayout>
 
     </ScrollView>

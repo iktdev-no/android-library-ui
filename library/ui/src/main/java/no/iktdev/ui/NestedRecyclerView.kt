@@ -2,35 +2,95 @@ package no.iktdev.ui
 
 import android.content.Context
 import android.content.res.TypedArray
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.annotation.StyleableRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import no.iktdev.ui.databinding.ViewNestedRecyclerViewBinding
 
-class NestedRecyclerView(context: Context, attr: AttributeSet) : RecyclerView(context, attr) {
+class NestedRecyclerView(context: Context, val attr: AttributeSet? = null) : RecyclerView(context, attr) {
+
+    data class InnerStyles(
+        @DrawableRes var background: Int? = null,
+        var backgroundTint: Int? = null,
+        var headerTextSizeInPixel: Int? = null,
+        var headerTextColor: Int? = null,
+        var emptyTextColor: Int? = null,
+        @DrawableRes var emptyIconSrc: Int? = null,
+        var emptyIconSrcTint: Int? = null,
+        @DrawableRes var emptyBackground: Int? = null,
+        var emptyBackgroundTint: Int? = null
+    )
+
+    fun TypedArray.ifPresent(@StyleableRes id: Int, block: (id: Int) -> Unit) {
+        if (this.hasValue(id)) {
+            block(id)
+        }
+    }
+
+    fun TypedArray.colorOrDefault(@StyleableRes id: Int): Int {
+        return this.getColor(id, 4054148)
+    }
 
     init {
-
-        val a = context.obtainStyledAttributes(attr, R.styleable.NestedRecyclerView)
+        val innerStyles = InnerStyles()
+        val a = context.theme.obtainStyledAttributes(attr, R.styleable.NestedRecyclerView,
+            0, 0)
         Styling.applyBackgroundAttr(a, rootView, R.styleable.NestedRecyclerView_android_background)
         Styling.applyBackgroundTintAttr(
             a,
             rootView,
             R.styleable.NestedRecyclerView_android_backgroundTint
         )
+
+        a.ifPresent(R.styleable.NestedRecyclerView_headerTextSize) {
+            innerStyles.headerTextSizeInPixel = a.getDimensionPixelSize(it, 72)
+        }
+        a.ifPresent(R.styleable.NestedRecyclerView_titleTextColor) {
+            innerStyles.headerTextColor = a.colorOrDefault(it)
+        }
+        a.ifPresent(R.styleable.NestedRecyclerView_recyclerBackground) {
+            val resourceId = a.getResourceId(it, 0)
+            if (resourceId != 0) {
+                innerStyles.background = resourceId
+            }
+        }
+        a.ifPresent(R.styleable.NestedRecyclerView_recyclerBackgroundTint) {
+            innerStyles.backgroundTint = a.colorOrDefault(it)
+        }
+        a.ifPresent(R.styleable.NestedRecyclerView_emptyTextColor) {
+            innerStyles.emptyTextColor = a.colorOrDefault(it)
+        }
+        a.ifPresent(R.styleable.NestedRecyclerView_emptySrc) {
+            val resourceId = a.getResourceId(it, 0)
+            if (resourceId != 0) {
+                innerStyles.emptyIconSrc = resourceId
+            }
+        }
+        a.ifPresent(R.styleable.NestedRecyclerView_emptySrcTint) {
+            innerStyles.emptyIconSrcTint = a.colorOrDefault(it)
+        }
+        a.ifPresent(R.styleable.NestedRecyclerView_emptyBackground) {
+            innerStyles.emptyBackground = a.colorOrDefault(it)
+        }
+        a.ifPresent(R.styleable.NestedRecyclerView_emptyBackgroundTint) {
+            innerStyles.emptyBackgroundTint = a.colorOrDefault(it)
+        }
+
         a.recycle()
 
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        adapter = NestedAdapter(context, emptyList(), attr)
+        adapter = NestedAdapter(context, emptyList(), innerStyles)
     }
 
-    class NestedAdapter(val context: Context, items: List<NestedAdapterData<*>>, val attr: AttributeSet? = null) : Adapter<ViewHolder>() {
+    class NestedAdapter(val context: Context, items: List<NestedAdapterData<*>>, val attrs: InnerStyles? = null) : Adapter<ViewHolder>() {
         private val _items: MutableList<NestedAdapterData<*>> = items.toMutableList()
 
         fun add(item: NestedAdapterData<*>) {
@@ -58,12 +118,16 @@ class NestedRecyclerView(context: Context, attr: AttributeSet) : RecyclerView(co
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NestableViewHolder {
-            val a = context.obtainStyledAttributes(attr, R.styleable.NestedRecyclerView)
-            val binding =
-                ViewNestedRecyclerViewBinding.inflate(LayoutInflater.from(context), parent, false)
-            onTypedArray(binding, a)
-            a.recycle()
+            val binding = ViewNestedRecyclerViewBinding.inflate(LayoutInflater.from(context), parent, false).also {
+                attrs?.let { a ->
+                    a.headerTextSizeInPixel?.let { px -> it.nestedTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, px.toFloat()) }
+                    a.headerTextColor?.let { color -> it.nestedTitle.setTextColor(color) }
+                    a.emptyIconSrc?.let { drawableRes -> it.emptyImage.setImageResource(drawableRes) }
+                    a.emptyIconSrcTint?.let { color -> it.emptyImage.setColorFilter(color) }
+                }
+            }
             return NestableViewHolder(binding)
+
         }
 
         override fun getItemCount(): Int {
@@ -87,7 +151,6 @@ class NestedRecyclerView(context: Context, attr: AttributeSet) : RecyclerView(co
                 if (data.emptyIconRes != 0 && data.emptyIconRes != null)
                     binding.emptyImage.setImageResource(data.emptyIconRes)
             }
-
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -95,44 +158,6 @@ class NestedRecyclerView(context: Context, attr: AttributeSet) : RecyclerView(co
             if (holder is NestableViewHolder)
                 holder.set(context, data)
         }
-
-        private fun onTypedArray(binding: ViewNestedRecyclerViewBinding, a: TypedArray) {
-            Styling.applyBackgroundAttr(
-                a,
-                binding.nestedRecycler,
-                R.styleable.NestedRecyclerView_recyclerBackground
-            )
-            Styling.applyBackgroundTintAttr(
-                a,
-                binding.nestedRecycler,
-                R.styleable.NestedRecyclerView_recyclerBackgroundTint
-            )
-
-            Styling.applyTextColorAttr(
-                a,
-                binding.nestedTitle,
-                R.styleable.NestedRecyclerView_titleTextColor
-            )
-            Styling.applyTextColorAttr(a, binding.emptyText, R.styleable.NestedRecyclerView_emptyTextColor)
-            Styling.applySrcAttr(a, binding.emptyImage, R.styleable.NestedRecyclerView_emptySrc)
-            Styling.applySrcTintAttr(a, binding.emptyImage, R.styleable.NestedRecyclerView_emptySrcTint)
-            Styling.applyBackgroundAttr(
-                a,
-                binding.emptyContainer,
-                R.styleable.NestedRecyclerView_emptyBackground
-            )
-            Styling.applyBackgroundTintAttr(
-                a,
-                binding.emptyContainer,
-                R.styleable.NestedRecyclerView_emptyBackgroundTint
-            )
-            Styling.applyTextSize(
-                a,
-                binding.nestedTitle,
-                R.styleable.NestedRecyclerView_headerTextSize
-            )
-        }
-
     }
 }
 
